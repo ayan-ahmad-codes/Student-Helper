@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "student-helper",
+    "name": "Student Helper",
     "slug": "student-helper",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "student-helper",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -16,10 +17,33 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.ayanahmad.studenthelper"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-sharing",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Student Helper to access your photos for study materials.",
+          "cameraPermission": "Allow Student Helper to take photos of notes and whiteboards."
+        }
+      ],
+      "expo-font"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bd6581e2-2b33-4dea-b33a-79ffe0cee9b8"
+      }
     }
   }
 }
