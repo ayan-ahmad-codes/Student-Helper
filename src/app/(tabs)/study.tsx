@@ -21,6 +21,7 @@ import { Card } from '../../components/common/Card';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ModalWrapper } from '../../components/common/ModalWrapper';
 import { DarkModeToggle } from '../../components/common/DarkModeToggle';
+import { SystemNavToggle } from '../../components/common/SystemNavToggle';
 import { FileItem } from '../../components/study/FileItem';
 import { FolderCard } from '../../components/study/FolderCard';
 import {
@@ -278,7 +279,7 @@ export default function StudyScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 16, paddingBottom: 100 },
+          { paddingTop: insets.top + 16, paddingBottom: 140 },
         ]}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -295,6 +296,7 @@ export default function StudyScreen() {
             Study Material
           </Text>
           <View style={styles.headerActions}>
+            <SystemNavToggle compact />
             <DarkModeToggle />
             <Button
               title="Import File"
@@ -441,7 +443,7 @@ export default function StudyScreen() {
           styles.fab,
           {
             backgroundColor: theme.primary,
-            bottom: Platform.OS === 'ios' ? 100 : 80,
+            bottom: 24,
           },
         ]}
         accessibilityLabel="Take Photo of Notes"

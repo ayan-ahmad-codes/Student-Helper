@@ -11,6 +11,9 @@ interface ThemeContextType {
   theme: typeof Colors.light;
   setMode: (mode: ThemeMode) => void;
   toggleTheme: () => void;
+  hideSystemNavBar: boolean;
+  setHideSystemNavBar: (hide: boolean) => void;
+  toggleHideSystemNavBar: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -19,11 +22,15 @@ const ThemeContext = createContext<ThemeContextType>({
   theme: Colors.light,
   setMode: () => {},
   toggleTheme: () => {},
+  hideSystemNavBar: false,
+  setHideSystemNavBar: () => {},
+  toggleHideSystemNavBar: () => {},
 });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemColorScheme = useColorScheme();
   const [mode, setModeState] = useState<ThemeMode>('system');
+  const [hideSystemNavBar, setHideSystemNavBarState] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -36,8 +43,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (row && (row.value === 'light' || row.value === 'dark' || row.value === 'system')) {
           setModeState(row.value as ThemeMode);
         }
+
+        const navRow = await db.getFirstAsync<{ value: string }>(
+          'SELECT value FROM settings WHERE key = ?',
+          'hide_system_nav_bar'
+        );
+        if (navRow && (navRow.value === 'true' || navRow.value === 'false')) {
+          setHideSystemNavBarState(navRow.value === 'true');
+        }
       } catch {
-        // Fallback to system
+        // Fallback
       }
     })();
   }, []);
@@ -56,6 +71,24 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  const setHideSystemNavBar = async (hide: boolean) => {
+    setHideSystemNavBarState(hide);
+    try {
+      const db = await getDb();
+      await db.runAsync(
+        'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+        'hide_system_nav_bar',
+        hide ? 'true' : 'false'
+      );
+    } catch {
+      // Ignored
+    }
+  };
+
+  const toggleHideSystemNavBar = () => {
+    setHideSystemNavBar(!hideSystemNavBar);
+  };
+
   const isDark =
     mode === 'dark' || (mode === 'system' && systemColorScheme === 'dark');
 
@@ -66,7 +99,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <ThemeContext.Provider value={{ mode, isDark, theme, setMode, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{
+        mode,
+        isDark,
+        theme,
+        setMode,
+        toggleTheme,
+        hideSystemNavBar,
+        setHideSystemNavBar,
+        toggleHideSystemNavBar,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );

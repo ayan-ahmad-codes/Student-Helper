@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { NavigationBar } from 'expo-navigation-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useAppTheme } from '../context/ThemeContext';
 import { getDb } from '../database/db';
 import { ensureMaterialsDir } from '../services/fileStorageService';
 
 function RootNavigation() {
-  const { isDark, theme } = useAppTheme();
+  const { isDark, theme, hideSystemNavBar } = useAppTheme();
 
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
+      {Platform.OS === 'android' && (
+        <NavigationBar
+          style={isDark ? 'light' : 'dark'}
+          hidden={hideSystemNavBar}
+        />
+      )}
       <Stack
         screenOptions={{
           headerShown: false,

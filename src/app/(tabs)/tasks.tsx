@@ -17,6 +17,7 @@ import { Input } from '../../components/common/Input';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ModalWrapper } from '../../components/common/ModalWrapper';
 import { DarkModeToggle } from '../../components/common/DarkModeToggle';
+import { SystemNavToggle } from '../../components/common/SystemNavToggle';
 import { TaskItem } from '../../components/tasks/TaskItem';
 import { NoteCard } from '../../components/tasks/NoteCard';
 import {
@@ -199,7 +200,7 @@ export default function TasksScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 16, paddingBottom: 40 },
+          { paddingTop: insets.top + 16, paddingBottom: 110 },
         ]}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -216,6 +217,7 @@ export default function TasksScreen() {
             Tasks & Notes
           </Text>
           <View style={styles.headerActions}>
+            <SystemNavToggle compact />
             <DarkModeToggle />
             <Button
               title={activeTab === 'tasks' ? 'New Task' : 'New Note'}

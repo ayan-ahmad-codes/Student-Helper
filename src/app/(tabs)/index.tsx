@@ -19,6 +19,7 @@ import { getExpenseSummary } from '../../services/expenseService';
 import { Task, TimetableClass, ExpenseSummary } from '../../types';
 import { AppLogo } from '../../components/common/AppLogo';
 import { DarkModeToggle } from '../../components/common/DarkModeToggle';
+import { SystemNavToggle } from '../../components/common/SystemNavToggle';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -95,7 +96,7 @@ export default function HomeScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 16, paddingBottom: 32 },
+          { paddingTop: insets.top + 16, paddingBottom: 110 },
         ]}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -106,7 +107,7 @@ export default function HomeScreen() {
           />
         }
       >
-        {/* Top Header with App Logo and Dark Mode Switch */}
+        {/* Top Header with App Logo, Nav Bar Mode & Dark Mode Switch */}
         <View style={styles.header}>
           <View style={styles.brandRow}>
             <AppLogo size={46} style={styles.headerLogo} />
@@ -120,7 +121,10 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <DarkModeToggle />
+          <View style={styles.headerActions}>
+            <SystemNavToggle compact />
+            <DarkModeToggle />
+          </View>
         </View>
 
         {/* Quick Action Chips */}
@@ -383,6 +387,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   brandRow: {
     flexDirection: 'row',

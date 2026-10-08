@@ -3,9 +3,21 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '../../context/ThemeContext';
 import { Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
-  const { theme } = useAppTheme();
+  const insets = useSafeAreaInsets();
+  const { theme, isDark } = useAppTheme();
+
+  // Dynamic clearance for Android navigation bar (3-button or gesture) and iOS home indicator:
+  // When insets.bottom > 0 (3-button nav ~48, gesture ~16-24, iOS ~34), add 6px buffer so
+  // icons and labels sit cleanly elevated above the phone navigation buttons.
+  // When insets.bottom === 0, provide 12px cushion on Android so it never feels cramped.
+  const bottomPadding = insets.bottom > 0
+    ? insets.bottom + 6
+    : (Platform.OS === 'android' ? 12 : 8);
+
+  const tabBarHeight = 54 + bottomPadding;
 
   return (
     <Tabs
@@ -17,10 +29,14 @@ export default function TabsLayout() {
           backgroundColor: theme.tabBar,
           borderTopColor: theme.border,
           borderTopWidth: 1,
-          height: Platform.OS === 'ios' ? 88 : 64,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 10,
-          paddingTop: 8,
+          height: tabBarHeight,
+          paddingBottom: bottomPadding,
+          paddingTop: 6,
           elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: isDark ? 0.3 : 0.06,
+          shadowRadius: 6,
         },
         tabBarLabelStyle: {
           fontSize: 11,
@@ -35,7 +51,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
-              size={22}
+              size={24}
               color={color}
             />
           ),
@@ -48,7 +64,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'folder' : 'folder-outline'}
-              size={22}
+              size={24}
               color={color}
             />
           ),
@@ -61,7 +77,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'calendar' : 'calendar-outline'}
-              size={22}
+              size={24}
               color={color}
             />
           ),
@@ -74,7 +90,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'checkbox' : 'checkbox-outline'}
-              size={22}
+              size={24}
               color={color}
             />
           ),
@@ -87,7 +103,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'wallet' : 'wallet-outline'}
-              size={22}
+              size={24}
               color={color}
             />
           ),
